@@ -1,0 +1,247 @@
+swagger: '2.0'
+info:
+  description: >-
+    This is a eConnect Testendpoing. For more detailes questions ask
+    moeller.bernd@scheidt-bachmann.de
+  version: 0.0.1
+  title: eConnect Test Authorization Endpoint
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: moeller.bernd@scheidt-bachmann.de
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: econnect.herokuapp.com
+basePath: /econnect/v1
+schemes:
+  - http
+paths:
+  /version:
+    get:
+      tags:
+        - version
+      summary: Get the version of the eConnect API
+      description: Get the version of the eConnect API
+      operationId: getVersion
+      produces:
+        - application/xml
+        - application/json
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/version'
+  /authorizations:
+    put:
+      tags:
+        - authorizations
+      summary: used to receive one or more identifiers read for authorization purposes
+      operationId: putAuthorization
+      consumes:
+        - application/xml
+        - application/json
+      parameters:
+        - name: Identifications
+          in: body
+          schema:
+            $ref: '#/definitions/authRequest'
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/authResponse'
+  /events:
+    put:
+      tags:
+        - events
+      summary: >-
+        endpoint to load off one or more events that occurred in the parking
+        system (entries, exits, back-outs)
+      consumes:
+        - application/xml
+        - application/json
+      parameters: 
+      - name: eventList
+        in: body
+        schema:
+          $ref: '#/definitions/eventList'
+      responses:
+        '200':
+          description: Successful operation
+  /transactions:
+    put:
+      tags:
+        - transactions
+      summary: >-
+        endpoint to receive transaction confirmation records holding all details
+        required for settlement and reconciliation
+      responses:
+        '200':
+          description: Successful operation
+definitions:
+  version:
+    type: string
+    example: 1.0.0
+    maxLength: 5
+    minItems: 1
+    maxItems: 1
+  identification:
+    type: object
+    properties:
+      id:
+        type: string
+        example: EA9872F001
+      mediaType:
+        type: string
+        enum:
+          - MIFARE
+          - UHF
+          - LICENSEPLATE
+      encoding:
+        type: string
+        enum:
+          - HEX
+          - HEX_REVERSE
+          - DEC
+          - DEC_REVERSE
+          - NATIVE
+  identifications:
+    type: object
+    properties:
+      identification:
+        $ref: '#/definitions/identification'
+    required:
+      - identification
+    minProperties: 1
+    maxProperties: 5
+  authRequest:
+    type: object
+    properties:
+      id:
+        description: >-
+          Unique id identifying this authorization request. This is used for
+          idempotency of messages and for later matching of responses.
+        type: string
+      timeStamp:
+        description: >-
+          ISO8601 date/time information of when the request was created
+          initially
+        type: string
+        format: date-time
+      authType:
+        description: >-
+          Type of authorization to be granted ENTRY user would like to enter the
+          car park EXIT (user would like to leave the car park) PAYMENT (user
+          would like to use the id for discount and/or payment purposes)
+        type: string
+        enum:
+          - ENTRY
+          - EXIT
+          - PAYMENT
+      locationId:
+        type: string
+        example: SB2011.2010.099101
+      identificationList:
+        $ref: '#/definitions/identifications'
+      amountDue:
+        type: integer
+  authResponse:
+    type: object
+    properties:
+      id:
+        description: >-
+          Unique id identifying this authorization request. This is used for
+          idempotency of messages and for later matching of responses.
+        type: string
+      reference:
+        description: ''
+        type: string
+      timeStamp:
+        description: >-
+          ISO8601 date/time information of when the request was created
+          initially
+        type: string
+        format: date-time
+      customerToken:
+        type: integer
+      authType:
+        description: >-
+          Type of authorization to be granted ENTRY user would like to enter the
+          car park EXIT (user would like to leave the car park) PAYMENT (user
+          would like to use the id for discount and/or payment purposes)
+        type: string
+        enum:
+          - ENTRY
+          - EXIT
+          - PAYMENT
+      locationId:
+        type: string
+        example: SB2011.2010.099101
+      responseCode:
+        type: string
+        enum:
+          - GRANTED
+          - DECLINED
+          - NOTFOUND
+      responseMessage:
+        type: string
+      quotaGroup:
+        type: string
+      identificationList:
+        $ref: '#/definitions/identifications'
+      amountDue:
+        type: integer
+  event:
+    type: "object"
+    properties:
+      id:
+        description: >-
+          Unique id identifying this authorization request. This is used for
+          idempotency of messages and for later matching of responses.
+        type: string
+      timeStamp:
+        description: >-
+          ISO8601 date/time information of when the request was created
+          initially
+        type: string
+        format: date-time
+      customerToken:
+        description: ""
+        type: integer
+        minimum: 0
+        maximum: 99999999
+      locationId:
+        type: string
+        example: SB2011.2010.099101
+      totalAmount:
+        type: integer
+  eventList:
+    type: "object"
+    properties:
+      event:
+        $ref: '#/definitions/event'
+    minProperties: 1
+    maxProperties: 10
+  transaction:
+    type: "object"
+    properties:
+      id:
+        description: >-
+          Unique id identifying this authorization request. This is used for
+          idempotency of messages and for later matching of responses.
+        type: string
+      timeStamp:
+        description: >-
+          ISO8601 date/time information of when the request was created
+          initially
+        type: string
+        format: date-time
+        
+  transactionList:
+    
+      
+        
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
