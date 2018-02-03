@@ -61,11 +61,11 @@ paths:
       consumes:
         - application/xml
         - application/json
-      parameters: 
-      - name: eventList
-        in: body
-        schema:
-          $ref: '#/definitions/eventList'
+      parameters:
+        - name: eventList
+          in: body
+          schema:
+            $ref: '#/definitions/eventList'
       responses:
         '200':
           description: Successful operation
@@ -193,7 +193,7 @@ definitions:
       amountDue:
         type: integer
   event:
-    type: "object"
+    type: object
     properties:
       id:
         description: >-
@@ -207,7 +207,7 @@ definitions:
         type: string
         format: date-time
       customerToken:
-        description: ""
+        description: ''
         type: integer
         minimum: 0
         maximum: 99999999
@@ -217,14 +217,14 @@ definitions:
       totalAmount:
         type: integer
   eventList:
-    type: "object"
+    type: object
     properties:
       event:
         $ref: '#/definitions/event'
     minProperties: 1
     maxProperties: 10
   transaction:
-    type: "object"
+    type: object
     properties:
       id:
         description: >-
@@ -237,11 +237,11 @@ definitions:
           initially
         type: string
         format: date-time
-        
-  transactionList:
-    
-      
-        
+  transactionList: 
+    type: object
+    properties:
+      transaction:
+        $ref: '#/definitions/transaction'
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
