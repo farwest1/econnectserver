@@ -58,6 +58,7 @@ paths:
       summary: >-
         endpoint to load off one or more events that occurred in the parking
         system (entries, exits, back-outs)
+      operationId: putEvents
       consumes:
         - application/xml
         - application/json
@@ -76,6 +77,7 @@ paths:
       summary: >-
         endpoint to receive transaction confirmation records holding all details
         required for settlement and reconciliation
+      operationId: putTransactions
       responses:
         '200':
           description: Successful operation
@@ -237,7 +239,7 @@ definitions:
           initially
         type: string
         format: date-time
-  transactionList: 
+  transactionList:
     type: object
     properties:
       transaction:
